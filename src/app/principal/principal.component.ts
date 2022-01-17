@@ -17,6 +17,8 @@ export class PrincipalComponent implements OnInit {
 
     ngOnInit(): void {
 
+
+
         let self: any = this;
         $('body').unbind()
             .on('click', '.td-indicators', function () {
@@ -41,6 +43,8 @@ export class PrincipalComponent implements OnInit {
                 },2000)
                 // @ts-ignore
                 let _this: any = $(this);
+                $('#chartType').remove()
+                $('#div-chart-type').append('<canvas id="chartType"></canvas>')
                 self.lookIndicatorToday(_this.data('id'));
             })
         this.listIndicator()
@@ -49,15 +53,57 @@ export class PrincipalComponent implements OnInit {
 
     public async listIndicator() {
         let table: any;
+        const labels: any = [];
+        const data_values: any = [];
 
         this.indicators = (await this.indicatorsService.getAll())
 
+
         for (const indicators in this.indicators) {
+
             if(this.indicators[indicators]['codigo'] != undefined){
+
                 table += '<tr><td class="td-indicators" data-id="' +this.indicators[indicators]['codigo']+ '"><a  data-bs-toggle="modal" data-bs-target="#modalIndicator"><h3 class="mb-1">'+this.indicators[indicators]['nombre']+'</h3><p class="mb-1">'+this.indicators[indicators]['unidad_medida']+'</p></a></td><td><i title ="Ver valores actuales" class="far fa-eye icon-modal" data-id="' +this.indicators[indicators]['codigo']+ '" data-bs-toggle="modal" data-bs-target="#modalIndicatorDate"></i></td></tr>';
+                labels.push(this.indicators[indicators]['nombre'])
+                data_values.push(this.indicators[indicators]['valor'])
             }
+
         }
         $('#table-indicators tbody').append(table);
+
+
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Valor en Pesos',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: data_values,
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive:true,
+                maintainAspectRatio: true,
+                legend:{
+                    position:'top',
+                },
+                title:{
+                    display:true,
+                    text:'Chart.js Line Chart'
+                }
+            }
+        };
+
+        // @ts-ignore
+        const ChartIndicadores = new Chart(
+            document.getElementById('ChartIndicadores'),
+            config
+        );
 
     }
 
@@ -80,7 +126,10 @@ export class PrincipalComponent implements OnInit {
     }
 
     async lookIndicatorToday(indicator:string): Promise<void>{
+
         let type_value_signo
+        let labels: any = [];
+        let data_values: any = [];
         let nombre_indicator = document.getElementById('nombre_indicator')
         let fecha_indicator = document.getElementById('fecha_indicator')
         let unidad_medida = document.getElementById('unidad_de_medida')
@@ -113,6 +162,44 @@ export class PrincipalComponent implements OnInit {
             fecha_indicator['value'] = this.type_indicators['serie'][serie].fecha.substr(0,10);
             break;
         }
+
+        for (const serie in this.type_indicators['serie']) {
+            labels.unshift(this.type_indicators['serie'][serie].fecha.substr(0,10))
+            data_values.unshift(this.type_indicators['serie'][serie].valor)
+        }
+
+
+         let data = {
+            labels: labels,
+            datasets: [{
+                label: 'Unidad de media en '+type_value,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: data_values,
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive:true,
+                maintainAspectRatio: true,
+                legend:{
+                    position:'top',
+                },
+                title:{
+                    display:true,
+                    text:'Chart.js Line Chart'
+                }
+            }
+        };
+
+        // @ts-ignore
+        const chartType = new Chart(
+            document.getElementById('chartType'),
+            config
+        );
 
 
     }
