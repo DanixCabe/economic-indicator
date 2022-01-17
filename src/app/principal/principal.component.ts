@@ -20,6 +20,15 @@ export class PrincipalComponent implements OnInit {
 
 
         let self: any = this;
+
+        $(document).ready(function(){
+            // @ts-ignore
+            $("#ex1 a").click(function(e){
+                e.preventDefault();
+                // @ts-ignore
+                $(this).tab("show");
+            });
+        });
         $('body').unbind()
             .on('click', '.td-indicators', function () {
                 $('.placeholder').removeAttr('hidden');
@@ -53,58 +62,131 @@ export class PrincipalComponent implements OnInit {
 
     public async listIndicator() {
         let table: any;
-        const labels: any = [];
-        const data_values: any = [];
+        const labels_pesos: any = [];
+        const labels_porcentaje: any = [];
+        const labels_dolares: any = [];
+        const data_values_pesos: any = [];
+        const data_values_dolares: any = [];
+        const data_values_porcentaje: any = [];
 
         this.indicators = (await this.indicatorsService.getAll())
 
 
         for (const indicators in this.indicators) {
+            if (this.indicators[indicators]['codigo'] != undefined) {
+                table += '<tr><td class="td-indicators" data-id="' + this.indicators[indicators]['codigo'] + '"><a  data-bs-toggle="modal" data-bs-target="#modalIndicator"><h3 class="mb-1">' + this.indicators[indicators]['nombre'] + '</h3><p class="mb-1">' + this.indicators[indicators]['unidad_medida'] + '</p></a></td><td><i title ="Ver valores actuales" class="far fa-eye icon-modal" data-id="' + this.indicators[indicators]['codigo'] + '" data-bs-toggle="modal" data-bs-target="#modalIndicatorDate"></i></td></tr>';
+                if (this.indicators[indicators]['unidad_medida'] == "Pesos") {
+                    labels_pesos.push(this.indicators[indicators]['nombre'])
+                    data_values_pesos.push(this.indicators[indicators]['valor'])
+                } else if (this.indicators[indicators]['unidad_medida'] == "Dólar") {
+                    labels_dolares.push(this.indicators[indicators]['nombre'])
+                    data_values_dolares.push(this.indicators[indicators]['valor'])
+                } else {
+                    labels_porcentaje.push(this.indicators[indicators]['nombre'])
+                    data_values_porcentaje.push(this.indicators[indicators]['valor'])
+                }
 
-            if(this.indicators[indicators]['codigo'] != undefined){
-
-                table += '<tr><td class="td-indicators" data-id="' +this.indicators[indicators]['codigo']+ '"><a  data-bs-toggle="modal" data-bs-target="#modalIndicator"><h3 class="mb-1">'+this.indicators[indicators]['nombre']+'</h3><p class="mb-1">'+this.indicators[indicators]['unidad_medida']+'</p></a></td><td><i title ="Ver valores actuales" class="far fa-eye icon-modal" data-id="' +this.indicators[indicators]['codigo']+ '" data-bs-toggle="modal" data-bs-target="#modalIndicatorDate"></i></td></tr>';
-                labels.push(this.indicators[indicators]['nombre'])
-                data_values.push(this.indicators[indicators]['valor'])
             }
 
         }
         $('#table-indicators tbody').append(table);
 
 
-
-        const data = {
-            labels: labels,
+        const data_pesos = {
+            labels: labels_pesos,
             datasets: [{
-                label: 'Valor en Pesos',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: data_values,
+                label: 'Valor en CLP',
+                borderColor: 'rgb(99, 255, 104)',
+                backgroundColor: 'rgb(61, 168, 64)',
+                data: data_values_pesos,
             }]
         };
 
-        const config = {
-            type: 'line',
-            data: data,
+        const data_porcentaje = {
+            labels: labels_porcentaje,
+            datasets: [{
+                label: 'Valor en Porcentaje',
+                borderColor: 'rgb(92, 215, 242)',
+                backgroundColor: 'rgb(64, 154, 173)',
+                data: data_values_porcentaje,
+            }]
+        };
+
+        const data_dolar = {
+            labels: labels_dolares,
+            datasets: [{
+                label: 'Valor en Dólar',
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(255, 99, 132)',
+                data: data_values_dolares,
+            }]
+        };
+
+        const config_pesos = {
+            type: 'bar',
+            data: data_pesos,
             options: {
-                responsive:true,
+                responsive: true,
                 maintainAspectRatio: true,
-                legend:{
-                    position:'top',
+                legend: {
+                    position: 'top',
                 },
-                title:{
-                    display:true,
-                    text:'Chart.js Line Chart'
+                title: {
+                    display: true,
+                    text: 'Chart.js Line Chart'
+                }
+            }
+        };
+
+        const config_dolar = {
+            type: 'line',
+            data: data_dolar,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Line Chart'
+                }
+            }
+        };
+
+        const config_porcentaje = {
+            type: 'bar',
+            data: data_porcentaje,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Line Chart'
                 }
             }
         };
 
         // @ts-ignore
-        const ChartIndicadores = new Chart(
-            document.getElementById('ChartIndicadores'),
-            config
+        const ChartIndicadoresPesos = new Chart(
+            document.getElementById('ChartIndicadoresDinero'),
+            config_pesos
         );
 
+        // @ts-ignore
+        const ChartIndicadoresPorcentaje = new Chart(
+            document.getElementById('ChartIndicadoresPorcentaje'),
+            config_porcentaje
+        );
+
+        // @ts-ignore
+        const ChartIndicadoresDolar = new Chart(
+            document.getElementById('ChartIndicadorDolar'),
+            config_dolar
+        );
     }
 
     async lookIndicatorsType(indicator:string): Promise<void>{
