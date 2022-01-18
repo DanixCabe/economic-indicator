@@ -4,7 +4,7 @@ Este proyecto consiste en mostrar los diferentes indicadores económicos de la A
 
 ## Instalación
 
-PAra comenzar se debe utilizar el comando `npm install` en la terminal.
+Para comenzar se debe utilizar el comando `npm install` en la terminal.
 
 ## Server Desarrollo
 
