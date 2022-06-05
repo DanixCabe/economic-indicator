@@ -22,10 +22,8 @@ export class PrincipalComponent implements OnInit {
         let self: any = this;
 
         $(document).ready(function(){
-            // @ts-ignore
             $("#ex1 a").click(function(e){
                 e.preventDefault();
-                // @ts-ignore
                 $(this).tab("show");
             });
         });
@@ -39,7 +37,6 @@ export class PrincipalComponent implements OnInit {
                     $('#table-type-indicators').removeAttr('hidden');
                     $('.title-indicator').removeAttr('hidden');
                 },2000)
-                // @ts-ignore
                 let _this: any = $(this);
                 self.lookIndicatorsType(_this.data('id'));
             })
@@ -50,7 +47,6 @@ export class PrincipalComponent implements OnInit {
                     $('.placeholder').attr('hidden','hidden');
                     $('.form-indicators').removeAttr('hidden');
                 },2000)
-                // @ts-ignore
                 let _this: any = $(this);
                 $('#chartType').remove()
                 $('#div-chart-type').append('<canvas id="chartType"></canvas>')
@@ -215,14 +211,6 @@ export class PrincipalComponent implements OnInit {
         let nombre_indicator = document.getElementById('nombre_indicator')
         let fecha_indicator = document.getElementById('fecha_indicator')
         let unidad_medida = document.getElementById('unidad_de_medida')
-/*        let form: any;
-        let date: any;
-        let tiempo = new Date()
-        let month = tiempo.getMonth()
-        let year = tiempo.getFullYear()
-        let dia_number = tiempo.getUTCDate()
-        month = 1 + month
-        date = dia_number-1+'-0'+month+'-'+year;*/
         this.type_indicators = await (this.indicatorsService.findIndicators(indicator))
         let type_value = this.type_indicators['unidad_medida']
 
@@ -234,13 +222,10 @@ export class PrincipalComponent implements OnInit {
             type_value_signo = '$'
         }
         $('.title-indicator').text(this.type_indicators['nombre'])
-        // @ts-ignore
         nombre_indicator['value'] = this.type_indicators['nombre']
-        // @ts-ignore
         unidad_medida['value'] = type_value;
         for (const serie in this.type_indicators['serie']) {
             $('#title-indicator-value').text(type_value_signo+' '+this.type_indicators['serie'][serie].valor);
-            // @ts-ignore
             fecha_indicator['value'] = this.type_indicators['serie'][serie].fecha.substr(0,10);
             break;
         }

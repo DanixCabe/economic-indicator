@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { PrincipalComponent } from './principal/principal.component';
 import {IndicatorsService} from "./_services/indicators.service";
 import {HttpClientModule} from "@angular/common/http";
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        PrincipalComponent
+        PrincipalComponent,
+        NavbarComponent
     ],
     imports: [
         BrowserModule,

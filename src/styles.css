@@ -56,10 +56,15 @@ td p{
     width: 100px;
 }
 
-.modal{
-/*    top: 15%;*/
-}
 
 #title-indicator-value{
     color: #2470dc;
+}
+
+
+
+.chart-container{
+    overflow: scroll;
+    align-items: center;
+    
 }
