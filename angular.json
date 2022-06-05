@@ -122,6 +122,9 @@
               "devServerTarget": "prueba-tecnica:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
