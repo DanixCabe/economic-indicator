@@ -1,4 +1,4 @@
-# PruebaTecnica
+# Indicadores Económicos
 
 Este proyecto consiste en mostrar los diferentes indicadores económicos de la API https://mindicador.cl/.
 
